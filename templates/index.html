@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Cool Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        /* Add your CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin-right: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        textarea {
+            padding: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #17bd51;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+        nav a{
+            text-decoration: none;
+            color: white;
+        }
+        nav a:hover{
+            color: dodgerblue;
+            transition: 1s;
+        }
+        nav img{
+            height: 100px;
+            border-radius: 50px;
+            box-shadow: 20px 20px 20px black;
+            transition: 2s ease-in linear;
+        }
+        nav img:hover{
+            transform:scale(20px);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Legal-MC</h1>
+            <img src="static\images\logo.jpeg" alt="LOGO">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        
+        <h2>Welcome to our MC-Chatbot</h2>
+        <p>This is a place for you to enter Your Query:</p>
+        <form method="POST">
+            <textarea  id="user_input" name="user_input" cols="60" rows="2" placeholder="Search.." ></textarea><br>
+            <input type="submit" value="Submit" class="sumbit">
+        </form>
+        <div id="generated_text" name="generated_text">
+            
+            
+            {% if processed_input %}
+            <p> {{ processed_input| safe }}</p>
+            {% endif %}
+        </div>        
+        
+        <form action="/translate" method="post">
+            <br>
+            <input type="hidden" id="hidden_generated_text" name="hidden_generated_text">
+            <select name="selected_languages" id="ln1">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="bn">বাঙালি</option>
+                <option value="te">తెలుగు</option>
+                <option value="mr">मराठी</option>
+                <option value="ta">தமிழ்</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+                <option value="or">ଓଡ଼ିଆ</option>
+               
+            </select>
+            <input type="submit" value="->" id="sendGeneratedText">
+            
+        </form>
+
+
+    </div>
+</body>
+<script>
+    // JavaScript function to capture the content of generated_text
+    function captureGeneratedText() {
+        var generatedText = document.getElementById('generated_text').innerText;
+        document.getElementById('hidden_generated_text').value = generatedText;
+    }
+
+    // JavaScript function to send the hidden_generated_text
+    function sendGeneratedText() {
+        var generatedText = document.getElementById('hidden_generated_text').value;
+
+        // Send the data to the server using AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/translate', // Replace with the appropriate Flask route
+            data: {
+                hidden_generated_text: generatedText
+            },
+            success: function(response) {
+                // Handle the response from the server, if needed
+                console.log(response);
+            },
+            error: function(error) {
+                console.error('AJAX request failed:', error);
+            }
+        });
+    }
+
+    // Call the captureGeneratedText function when the page loads
+    window.onload = captureGeneratedText;
+
+    // Attach the sendGeneratedText function to the button click event
+    document.getElementById('sendGeneratedText').addEventListener('click', sendGeneratedText);
+</script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+</html>
